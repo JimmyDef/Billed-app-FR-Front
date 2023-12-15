@@ -17,7 +17,18 @@ export default class NewBill {
   }
   handleChangeFile = e => {
     e.preventDefault()
+    const inputFile = this.document.querySelector(`input[data-testid="file"]`)
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
+
+    const valideImageType = ["image/png", "image/jpeg", "image/jpg"];
+    const errorInputFile = this.document.querySelector("#error-input-file");
+      if (!valideImageType.includes(file.type)) {
+           errorInputFile.style.display = "block";
+           inputFile.value = "";
+          return;
+      }
+    errorInputFile.style.display = "none";
+
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
     const formData = new FormData()
