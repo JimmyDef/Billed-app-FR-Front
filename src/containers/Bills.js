@@ -36,13 +36,6 @@ export default class {
     modal.classList.add("show");
     modal.style.display = "block";
     modal.setAttribute("aria-hidden", "false");
-
-    // $("#modaleFile")
-    //   .find(".modal-body")
-    //   .html(
-    //     `<div style='text-align: center;' class="bill-proof-container"><img width=${imgWidth} src=${billUrl} alt="Bill" /></div>`
-    //   );
-    // $("#modaleFile").modal("show");
   };
   closeBillModal = () => {
     const modal = document.querySelector("#modaleFile");

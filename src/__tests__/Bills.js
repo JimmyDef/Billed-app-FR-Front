@@ -71,6 +71,7 @@ describe("Given I am connected as an employee", () => {
         fireEvent.click(eyeIcon);
         expect(handleClickIconEye).toHaveBeenCalled();
         expect(modalBill.classList.contains("show")).toBeTruthy();
+        expect(modalBill.style.display).not.toBe("none");
       });
     });
     describe("Given a bill modal is open", () => {
@@ -131,16 +132,14 @@ describe("Given I am connected as an employee", () => {
       const rows = tbody.querySelectorAll("tr");
       expect(rows).toHaveLength(4);
 
-      const billType1 = screen.getByText("Services en ligne");
-      expect(billType1).toBeTruthy();
-      const billName1 = screen.getByText("test3");
-      expect(billName1).toBeTruthy();
-      const billPrice1 = screen.getByText("300 €");
-      expect(billPrice1).toBeTruthy();
-      const billDate1 = screen.getByText("2003-03-03");
-      expect(billDate1).toBeTruthy();
-      const billName2 = screen.getByText("test1");
-      expect(billName2).toBeTruthy();
+      const firstBillType = screen.getByText("Hôtel et logement");
+      expect(firstBillType).toBeTruthy();
+      const firstBillillName = screen.getByText("encore");
+      expect(firstBillillName).toBeTruthy();
+      const firstBillPrice = screen.getByText("400 €");
+      expect(firstBillPrice).toBeTruthy();
+      const firstBillDate = screen.getByText("2004-04-04");
+      expect(firstBillDate).toBeTruthy();
     });
     describe("When an error occurs on API", () => {
       beforeEach(() => {
