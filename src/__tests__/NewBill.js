@@ -172,7 +172,7 @@ describe("Given I am connected as an employee", () => {
         pct: 20,
       };
 
-      const postedBill = await mockStore.bills().update(bill);
+      const postedBill = await mockStore.bills().update();
       expect(postedBill).toEqual(bill);
     });
 
