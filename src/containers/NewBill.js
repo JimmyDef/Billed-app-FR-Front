@@ -33,6 +33,7 @@ export default class NewBill {
       errorInputFile.classList.remove("display-error-msg");
       const email = JSON.parse(localStorage.getItem("user")).email;
       const formData = new FormData();
+
       formData.append("file", file);
       formData.append("email", email);
       this.formData = formData;
