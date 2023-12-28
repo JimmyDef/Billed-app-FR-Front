@@ -133,7 +133,7 @@ describe("Given I am connected as an employee", () => {
   });
 
   describe("When  I click on 'Envoyer'", () => {
-    test("Then handleSubmit function is called", () => {
+    test("Then handleSubmit function is called", async () => {
       document.body.innerHTML = NewBillUI();
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname });
@@ -145,12 +145,16 @@ describe("Given I am connected as an employee", () => {
         store,
         localStorage,
       });
+      const updateSpy = jest.spyOn(mockStore.bills(), "update");
 
       const handleSubmit = jest.fn(() => newBill.handleSubmit);
       const form = screen.getByTestId("form-new-bill");
       form.addEventListener("submit", handleSubmit);
       fireEvent.submit(form);
-      expect(handleSubmit).toHaveBeenCalled();
+      await waitFor(() => {
+        expect(handleSubmit).toHaveBeenCalled();
+        expect(updateSpy).toHaveBeenCalled();
+      });
     });
   });
   describe("When a user post a new bill", () => {
@@ -199,8 +203,10 @@ describe("Given I am connected as an employee", () => {
         form.addEventListener("submit", handleSubmit);
 
         fireEvent.submit(form);
-        await new Promise(process.nextTick);
-        expect(spyOnConsole).toBeCalledWith(new Error("404"));
+
+        await waitFor(() => {
+          expect(spyOnConsole).toBeCalledWith(new Error("404"));
+        });
       });
       test("fetches new bill to an API and fails with 500 message error", async () => {
         document.body.innerHTML = NewBillUI();
@@ -224,8 +230,9 @@ describe("Given I am connected as an employee", () => {
         form.addEventListener("submit", handleSubmit);
 
         fireEvent.submit(form);
-        await new Promise(process.nextTick);
-        expect(spyOnConsole).toBeCalledWith(new Error("500"));
+        waitFor(() => {
+          expect(spyOnConsole).toBeCalledWith(new Error("500"));
+        });
       });
     });
   });
