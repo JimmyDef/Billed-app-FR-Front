@@ -60,10 +60,6 @@ describe("Given I am connected as an employee", () => {
     });
     describe("When A file with a correct format is upload", () => {
       test("Then, the  input accept the file with no error message ", async () => {
-        document.body.innerHTML = NewBillUI();
-        const onNavigate = (pathname) => {
-          document.body.innerHTML = ROUTES({ pathname });
-        };
         const store = null;
         const newBill = new NewBill({
           document,
@@ -159,6 +155,10 @@ describe("Given I am connected as an employee", () => {
   });
   describe("When a user post a new bill", () => {
     test("Then a new bill is added through mock API POST ", async () => {
+      document.body.innerHTML = NewBillUI();
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
       const bill = {
         id: "47qAXb6fIm2zOKkLzMro",
         vat: "80",
@@ -175,6 +175,22 @@ describe("Given I am connected as an employee", () => {
         email: "a@a",
         pct: 20,
       };
+      const store = mockStore;
+      const newBill = new NewBill({
+        document,
+        onNavigate,
+        store,
+        localStorage,
+      });
+      const updateSpy = jest.spyOn(mockStore.bills(), "update");
+
+      const handleSubmit = jest.fn(() => newBill.handleSubmit);
+      const form = screen.getByTestId("form-new-bill");
+      form.addEventListener("submit", handleSubmit);
+      fireEvent.submit(form);
+      await waitFor(() => {
+        expect(updateSpy).toHaveBeenCalled();
+      });
 
       const postedBill = await mockStore.bills().update();
       expect(postedBill).toEqual(bill);
@@ -201,9 +217,7 @@ describe("Given I am connected as an employee", () => {
         const form = screen.getByTestId("form-new-bill");
         const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
         form.addEventListener("submit", handleSubmit);
-
         fireEvent.submit(form);
-
         await waitFor(() => {
           expect(spyOnConsole).toBeCalledWith(new Error("404"));
         });
