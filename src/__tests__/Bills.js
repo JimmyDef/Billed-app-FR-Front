@@ -26,7 +26,9 @@ describe("Given I am connected as an employee", () => {
       })
     );
   });
+
   describe("When I am on Bills Page", () => {
+    // Vérifie si l'icon window est bien mis en valeur dans le layout vertical.
     test("Then bill icon in vertical layout should be highlighted", async () => {
       const root = document.createElement("div");
       root.setAttribute("id", "root");
@@ -37,6 +39,8 @@ describe("Given I am connected as an employee", () => {
       const windowIcon = screen.getByTestId("icon-window");
       expect(windowIcon.classList.contains("active-icon")).toBe(true);
     });
+
+    // Vérifie si les notes de frais sont bien classées par date.
     test("Then bills should be ordered from earliest to latest", () => {
       const dates = screen
         .getAllByText(
@@ -48,7 +52,9 @@ describe("Given I am connected as an employee", () => {
       const datesSorted = [...dates].sort(antiChrono);
       expect(dates).toEqual(datesSorted);
     });
+
     describe("When I click on the icon eye", () => {
+      // Vérifie si la modal s'ouvre.
       test("Then a modal should open", async () => {
         const onNavigate = (pathname) => {
           document.body.innerHTML = ROUTES({ pathname });
@@ -74,8 +80,10 @@ describe("Given I am connected as an employee", () => {
         expect(modalBill.style.display).not.toBe("none");
       });
     });
+
     describe("Given a bill modal is open", () => {
       describe("when I click on the cross btn", () => {
+        // Vérifie si la modal se ferme.
         test("the modal should close", async () => {
           const onNavigate = (pathname) => {
             document.body.innerHTML = ROUTES({ pathname });
@@ -104,7 +112,9 @@ describe("Given I am connected as an employee", () => {
         });
       });
     });
+
     describe("when I click on the button 'Nouvelle note de frais' ", () => {
+      // Vérifie si la page NewBill s'affiche.
       test("Then I navigate to send a Newbill page", () => {
         const root = document.createElement("div");
         root.setAttribute("id", "root");
@@ -120,7 +130,9 @@ describe("Given I am connected as an employee", () => {
       });
     });
   });
+
   describe("When I navigate to bills page", () => {
+    // Vérifie si les notes de frais sont bien affichées.
     test("fetches bills from mock API GET", async () => {
       const root = document.createElement("div");
       root.setAttribute("id", "root");
@@ -141,6 +153,7 @@ describe("Given I am connected as an employee", () => {
       const firstBillDate = screen.getByText("2004-04-04");
       expect(firstBillDate).toBeTruthy();
     });
+
     describe("When an error occurs on API", () => {
       beforeEach(() => {
         jest.spyOn(mockStore, "bills");
@@ -149,6 +162,8 @@ describe("Given I am connected as an employee", () => {
         document.body.appendChild(root);
         router();
       });
+
+      // Vérifie le comportement si une erreur 404 survient lors de l'envoi de la note de frais.
       test("fetches bills from an API and fails with 404 message error", async () => {
         mockStore.bills.mockImplementationOnce(() => {
           return {
@@ -163,6 +178,8 @@ describe("Given I am connected as an employee", () => {
           expect(message).toBeTruthy();
         });
       });
+
+      // Vérifie le comportement si une erreur 500 survient lors de l'envoi de la note de frais.
       test("fetches messages from an API and fails with 500 message error", async () => {
         mockStore.bills.mockImplementationOnce(() => {
           return {
@@ -173,7 +190,6 @@ describe("Given I am connected as an employee", () => {
         });
 
         window.onNavigate(ROUTES_PATH.Bills);
-
         waitFor(() => {
           const message = screen.getByText(/Erreur 500/);
           expect(message).toBeTruthy();

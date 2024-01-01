@@ -23,6 +23,7 @@ describe("Given I am connected as an employee", () => {
     );
   });
   describe("When I am on NewBill Page", () => {
+    // Vérifie si l'icon mail est bien mis en valeur dans le layout vertical.
     test("Then mail icon in vertical layout should be highlighted", async () => {
       const root = document.createElement("div");
       root.setAttribute("id", "root");
@@ -34,6 +35,7 @@ describe("Given I am connected as an employee", () => {
       expect(windowIcon.classList.contains("active-icon")).toBeTruthy();
     });
 
+    // Vérifie si le formulaire est bien rendu.
     test("Then form inputs should be render correctly", () => {
       document.body.innerHTML = NewBillUI();
       const formNewBill = screen.getByTestId("form-new-bill");
@@ -59,6 +61,7 @@ describe("Given I am connected as an employee", () => {
       expect(submitBtn).toBeTruthy();
     });
     describe("When A file with a correct format is upload", () => {
+      // Vérifie le comportement si le fichier est conforme au format attendu.
       test("Then, the  input accept the file with no error message ", async () => {
         const store = null;
         const newBill = new NewBill({
@@ -71,6 +74,7 @@ describe("Given I am connected as an employee", () => {
         const fileInput = screen.getByTestId("file");
         const handleChangeFile = jest.fn(() => newBill.handleChangeFile);
         fileInput.addEventListener("change", handleChangeFile);
+        // Création d'un fichier avec le bon format.
         const file = new File(["img.jpg"], "imgTest.jpg", {
           type: "image/jpg",
         });
@@ -79,7 +83,6 @@ describe("Given I am connected as an employee", () => {
             files: [file],
           },
         });
-
         expect(handleChangeFile).toHaveBeenCalled();
         expect(fileInput.files[0].name).toBe("imgTest.jpg");
         expect(newBill.fileName).toBe("imgTest.jpg");
@@ -92,6 +95,7 @@ describe("Given I am connected as an employee", () => {
     });
 
     describe("When A file with an incorrect format is upload", () => {
+      // Vérifie le comportement si le fichier n'est pas conforme.
       test("Then, the file input value display no name with an error message ", async () => {
         document.body.innerHTML = NewBillUI();
         const onNavigate = (pathname) => {
@@ -108,6 +112,9 @@ describe("Given I am connected as an employee", () => {
         const fileInput = screen.getByTestId("file");
         const handleChangeFile = jest.fn(() => newBill.handleChangeFile);
         fileInput.addEventListener("change", handleChangeFile);
+
+        // Création d'un fichier avec le bon format.
+
         const file = new File(["img.jpg"], "imgTest.pdf", {
           type: "application/pdf",
         });
@@ -129,6 +136,7 @@ describe("Given I am connected as an employee", () => {
   });
 
   describe("When  I click on 'Envoyer'", () => {
+    // Vérifie si la fonction handleSubmit est bien appelée.
     test("Then handleSubmit function is called", async () => {
       document.body.innerHTML = NewBillUI();
       const onNavigate = (pathname) => {
@@ -141,8 +149,8 @@ describe("Given I am connected as an employee", () => {
         store,
         localStorage,
       });
-      const updateSpy = jest.spyOn(mockStore.bills(), "update");
 
+      const updateSpy = jest.spyOn(mockStore.bills(), "update");
       const handleSubmit = jest.fn(() => newBill.handleSubmit);
       const form = screen.getByTestId("form-new-bill");
       form.addEventListener("submit", handleSubmit);
@@ -154,6 +162,7 @@ describe("Given I am connected as an employee", () => {
     });
   });
   describe("When a user post a new bill", () => {
+    // Vérifie si la nouvelle note de frais est bien ajoutée via le mock
     test("Then a new bill is added through mock API POST ", async () => {
       document.body.innerHTML = NewBillUI();
       const onNavigate = (pathname) => {
@@ -197,6 +206,7 @@ describe("Given I am connected as an employee", () => {
     });
 
     describe("When an error occurs on API", () => {
+      // Vérifie le comportement si une erreur 404 survient lors de l'envoi de la note de frais.
       test("fetches new bill to an API and fails with 404 message error", async () => {
         document.body.innerHTML = NewBillUI();
         const onNavigate = (pathname) => {
@@ -222,6 +232,7 @@ describe("Given I am connected as an employee", () => {
           expect(spyOnConsole).toBeCalledWith(new Error("404"));
         });
       });
+      // Vérifie le comportement si une erreur 500 survient lors de l'envoi de la note de frais.
       test("fetches new bill to an API and fails with 500 message error", async () => {
         document.body.innerHTML = NewBillUI();
         const onNavigate = (pathname) => {
