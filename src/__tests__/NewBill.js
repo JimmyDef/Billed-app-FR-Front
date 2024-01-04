@@ -72,8 +72,8 @@ describe("Given I am connected as an employee", () => {
         });
 
         const fileInput = screen.getByTestId("file");
-        const handleChangeFile = jest.fn(() => newBill.handleChangeFile);
-        fileInput.addEventListener("change", handleChangeFile);
+
+        fileInput.addEventListener("change", newBill.handleChangeFile);
         // Création d'un fichier avec le bon format.
         const file = new File(["img.jpg"], "imgTest.jpg", {
           type: "image/jpg",
@@ -83,7 +83,7 @@ describe("Given I am connected as an employee", () => {
             files: [file],
           },
         });
-        expect(handleChangeFile).toHaveBeenCalled();
+
         expect(fileInput.files[0].name).toBe("imgTest.jpg");
         expect(newBill.fileName).toBe("imgTest.jpg");
         expect(newBill.formData).toBeDefined();
@@ -110,11 +110,7 @@ describe("Given I am connected as an employee", () => {
         });
 
         const fileInput = screen.getByTestId("file");
-        const handleChangeFile = jest.fn(() => newBill.handleChangeFile);
-        fileInput.addEventListener("change", handleChangeFile);
-
-        // Création d'un fichier avec le bon format.
-
+        fileInput.addEventListener("change", newBill.handleChangeFile);
         const file = new File(["img.jpg"], "imgTest.pdf", {
           type: "application/pdf",
         });
@@ -124,8 +120,7 @@ describe("Given I am connected as an employee", () => {
           },
         });
         expect(fileInput.value).toBe("");
-        expect(handleChangeFile).toHaveBeenCalled();
-        expect(newBill.fileName).toBeDefined();
+        expect(newBill.fileName).toBeNull();
         expect(newBill.formData).toBeUndefined();
         await waitFor(() => {
           const errorMsg = screen.getByTestId("error-input-file");
@@ -150,14 +145,12 @@ describe("Given I am connected as an employee", () => {
         localStorage,
       });
 
-      const updateSpy = jest.spyOn(mockStore.bills(), "update");
-      const handleSubmit = jest.fn(() => newBill.handleSubmit);
+      const handleSubmitSpy = jest.spyOn(newBill, "handleSubmit");
       const form = screen.getByTestId("form-new-bill");
-      form.addEventListener("submit", handleSubmit);
+      form.addEventListener("submit", newBill.handleSubmit);
       fireEvent.submit(form);
       await waitFor(() => {
-        expect(handleSubmit).toHaveBeenCalled();
-        expect(updateSpy).toHaveBeenCalled();
+        expect(handleSubmitSpy).toHaveBeenCalled();
       });
     });
   });
@@ -193,14 +186,12 @@ describe("Given I am connected as an employee", () => {
       });
       const updateSpy = jest.spyOn(mockStore.bills(), "update");
 
-      const handleSubmit = jest.fn(() => newBill.handleSubmit);
       const form = screen.getByTestId("form-new-bill");
-      form.addEventListener("submit", handleSubmit);
+      form.addEventListener("submit", newBill.handleSubmit);
       fireEvent.submit(form);
       await waitFor(() => {
         expect(updateSpy).toHaveBeenCalled();
       });
-
       const postedBill = await mockStore.bills().update();
       expect(postedBill).toEqual(bill);
     });
@@ -225,8 +216,8 @@ describe("Given I am connected as an employee", () => {
           localStorage,
         });
         const form = screen.getByTestId("form-new-bill");
-        const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
-        form.addEventListener("submit", handleSubmit);
+
+        form.addEventListener("submit", newBill.handleSubmit);
         fireEvent.submit(form);
         await waitFor(() => {
           expect(spyOnConsole).toBeCalledWith(new Error("404"));
@@ -251,8 +242,7 @@ describe("Given I am connected as an employee", () => {
           localStorage,
         });
         const form = screen.getByTestId("form-new-bill");
-        const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
-        form.addEventListener("submit", handleSubmit);
+        form.addEventListener("submit", newBill.handleSubmit);
 
         fireEvent.submit(form);
         waitFor(() => {

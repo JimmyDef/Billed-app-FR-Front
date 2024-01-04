@@ -70,12 +70,12 @@ describe("Given I am connected as an employee", () => {
         const modalBill = screen.getByTestId("modal-bill");
         expect(modalBill.classList.contains("show")).toBeFalsy();
         const eyeIcon = screen.getAllByTestId("icon-eye")[0];
-        const handleClickIconEye = jest.fn(() =>
+        const handleClickIconEyeSpy = jest.spyOn(newBill, "handleClickIconEye");
+        eyeIcon.addEventListener("click", () =>
           newBill.handleClickIconEye(eyeIcon)
         );
-        eyeIcon.addEventListener("click", handleClickIconEye);
         fireEvent.click(eyeIcon);
-        expect(handleClickIconEye).toHaveBeenCalled();
+        expect(handleClickIconEyeSpy).toHaveBeenCalled();
         expect(modalBill.classList.contains("show")).toBeTruthy();
         expect(modalBill.style.display).not.toBe("none");
       });
@@ -97,18 +97,24 @@ describe("Given I am connected as an employee", () => {
           });
           await waitFor(() => screen.getByTestId("modal-bill"));
           const modalBill = screen.getByTestId("modal-bill");
-          expect(modalBill.classList.contains("show")).toBeFalsy();
+
           const eyeIcon = screen.getAllByTestId("icon-eye")[0];
-          const handleClickIconEye = jest.fn(() =>
+          const handleClickIconEyeSpy = jest.spyOn(
+            newBill,
+            "handleClickIconEye"
+          );
+          eyeIcon.addEventListener("click", () =>
             newBill.handleClickIconEye(eyeIcon)
           );
-          eyeIcon.addEventListener("click", handleClickIconEye);
           fireEvent.click(eyeIcon);
-          const handleClickCloseBtn = jest.fn(newBill.closeBillModal());
+          expect(handleClickIconEyeSpy).toHaveBeenCalled();
+          expect(modalBill.classList.contains("show")).toBeTruthy();
+          const handleClickCloseSpy = jest.spyOn(newBill, "closeBillModal");
           const closeModalBtn = screen.getByTestId("close-modal-btn");
-          closeModalBtn.addEventListener("click", handleClickCloseBtn);
+          closeModalBtn.addEventListener("click", newBill.closeBillModal());
           fireEvent.click(closeModalBtn);
-          expect(handleClickCloseBtn).toHaveBeenCalled();
+          expect(handleClickCloseSpy).toHaveBeenCalled();
+          expect(modalBill.classList.contains("show")).toBeFalsy();
         });
       });
     });
