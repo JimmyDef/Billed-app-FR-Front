@@ -73,7 +73,7 @@ describe("Given I am connected as an employee", () => {
 
         const fileInput = screen.getByTestId("file");
 
-        fileInput.addEventListener("change", newBill.handleChangeFile);
+        fileInput.addEventListener("change", () => newBill.handleChangeFile);
         // Création d'un fichier avec le bon format.
         const file = new File(["img.jpg"], "imgTest.jpg", {
           type: "image/jpg",
@@ -110,7 +110,7 @@ describe("Given I am connected as an employee", () => {
         });
 
         const fileInput = screen.getByTestId("file");
-        fileInput.addEventListener("change", newBill.handleChangeFile);
+        fileInput.addEventListener("change", () => newBill.handleChangeFile);
         const file = new File(["img.jpg"], "imgTest.pdf", {
           type: "application/pdf",
         });
