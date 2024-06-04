@@ -127,12 +127,16 @@ describe("Given I am connected as an employee", () => {
         document.body.append(root);
         router();
         const newBillBtn = screen.getByTestId("btn-new-bill");
-        const handleClickNewBill = jest.fn(() => {
-          Bills.handleClickNewBill;
-        });
+        const handleClickNewBill = jest.fn(Bills.handleClickNewBill);
         newBillBtn.addEventListener("click", handleClickNewBill);
+
         fireEvent.click(newBillBtn);
+
+        // Vérifier que la fonction a été appelée
         expect(handleClickNewBill).toHaveBeenCalled();
+
+        // Vérifier que la navigation a bien eu lieu
+        expect(window.location.href).toContain(ROUTES_PATH["NewBill"]);
       });
     });
   });
